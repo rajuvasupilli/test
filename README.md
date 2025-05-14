@@ -82,10 +82,10 @@ flowchart TD
     GCP:::CSP
     onPrem:::CSP
     GKE:::GKE
+```
 
 
-
-
+```mermaid
 %%{
   init: {
     'theme': 'neutral',
