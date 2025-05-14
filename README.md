@@ -29,8 +29,50 @@
     CloudLogging --> LogsViewer[Cloud Ops - Logs Viewer]
     CloudTrace --> TraceViewer[Cloud Ops - Trace Viewer]
     GMP --> MetricsViewer[Cloud Ops - Metrics Explorer]
+```
+
+
+
+
+
+
+
+
+
+
+
+```mermaid
+   graph TD
+    subgraph GKE_Cluster
+        App[Application Pod]
+        OTEL[OpenTelemetry Collector - Google Managed]
+        PromAgent[Managed Prometheus Agent]
+        FL[Fluent Bit - Default GKE Logging Agent]
+    end
+
+    %% App telemetry
+    App -->|Logs| FL
+    App -->|Metrics| PromAgent
+    App -->|Traces| OTEL
+    App -->|Metrics| OTEL
+    App -->|Logs| OTEL
+
+    %% Data flow to Google Cloud
+    FL -->|Logs| CloudLogging[Cloud Logging]
+    PromAgent -->|Metrics| GMP[Google Managed Prometheus]
+    OTEL -->|Traces| CloudTrace[Cloud Trace]
+    OTEL -->|Logs| CloudLogging
+    OTEL -->|Metrics| GMP
+
+    %% Visualization layer
+    CloudLogging --> OpsSuite1[Cloud Ops Suite - Logs Viewer]
+    CloudTrace --> OpsSuite2[Cloud Ops Suite - Trace Viewer]
+    GMP --> OpsSuite3[Cloud Ops Suite - Metrics Explorer]
 
 ```
+
+
+==============================
 
 
 ```mermaid
