@@ -6,4 +6,5 @@ flowchart TD
             containerMetrics["Container Metrics (CPU, Memory, Network)"] --> GKE_Metric_Agent
         end
         GKE_Metric_Agent --> monitoring["Cloud Monitoring (Metrics Ingestion)"]
-    e
+    end
+```
