@@ -21,14 +21,10 @@
     PromAgent -->|Metrics| GMP[Google Managed Prometheus]
 
     %% GOTC telemetry routing
-    GOTC -->|Traces| CloudTrace[Cloud Trace]
+    GOTC -->|Traces| ELF
     GOTC -->|Logs| CloudLogging
     GOTC -->|Metrics| GMP
 
-    %% Visualization layers
-    CloudLogging --> LogsViewer[Cloud Ops - Logs Viewer]
-    CloudTrace --> TraceViewer[Cloud Ops - Trace Viewer]
-    GMP --> MetricsViewer[Cloud Ops - Metrics Explorer]
 ```
 
 
