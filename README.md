@@ -169,3 +169,81 @@ flowchart TD
     External:::CSP
     GKE:::GKE
 ```
+```mermaid
+%%{
+  init: {
+    'theme': 'neutral',
+    'themeVariables': {
+      'backgroundColor': '#F5F5F5',
+      'primaryarrowcolor': '#000000'
+    }
+  }
+}%%
+
+graph TD
+    subgraph gkecluster[GKE Cluster]
+    
+    subgraph userns[Application Namespace]
+        direction LR
+        A[Application Containers]
+    end
+
+    subgraph gdotns[GDOT Namespace]
+      direction LR
+      subgraph gdotsvc[GDOT OTLP Receiver Service]
+        M[OTLP Metric Receiver]
+        L[OTLP Log Receiver]
+        T[OTLP Trace Receiver]
+
+        MP[Batch Processor]
+        LP[Batch Processor]
+        TP[Batch Processor]
+        
+        exp1[GCP Metrics Exporter]
+        exp3[OTLP Exporter (Traces)]
+      end
+
+      subgraph promsvc[GDOT Prometheus Metrics Receiver Service]
+        S[Prometheus Receiver as DaemonSet] --> |scrapes| A
+        S --> SP[Batch Processor]
+        SP --> exp11[GCP Metrics Exporter]       
+      end
+
+        A -->|http/grpc| M
+        A -->|http/grpc| L
+        A -->|http/grpc| T
+        M --> MP[Batch Processor]
+        L --> LP[Batch Processor]
+        T --> TP[Batch Processor]
+        MP --> exp1[GCP Metrics Exporter]
+        LP --> exp3[OTLP Exporter (Traces)]
+        TP --> exp3[OTLP Exporter (Traces)]
+    end  
+end
+
+    subgraph elf_forwarding_storage[On Prem / ELF]
+        direction LR
+        exp3 -->|http/grpc| TB[ELF Endpoint]
+    end
+    
+    subgraph metric_forwarding_storage[GCP]
+        direction LR
+        exp11 -->|https| MB[Cloud Monitoring]
+        exp1 -->|https| MB[Cloud Monitoring]       
+    end
+
+%% styling
+    classDef clusterstyle fill: #DDF8CC, stroke: #B85450, stroke-width: 1px;
+    classDef lgenstyle fill: #FFF8CC, stroke: #B85450, stroke-width: 1px;
+    classDef gdotstyle fill: #FFE6CC, stroke: #D79B00, stroke-width: 1px;
+    classDef promstyle fill: #FFE8DC, stroke: #D79B00, stroke-width: 1px;
+    classDef gcpstyle fill: #D5F5E3, stroke: #6C8EBF, stroke-width: 1px;
+    classDef elfstyle fill: #D5F5D3, stroke: #6C8EBF, stroke-width: 1px;
+
+    gkecluster:::clusterstyle
+    userns:::lgenstyle
+    gdotsvc:::gdotstyle
+    promsvc:::promstyle
+    elf_forwarding_storage:::elfstyle
+    metric_forwarding_storage:::gcpstyle
+```
