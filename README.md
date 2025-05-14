@@ -169,6 +169,7 @@ flowchart TD
     External:::CSP
     GKE:::GKE
 ```
+
 ```mermaid
 %%{
   init: {
@@ -190,6 +191,7 @@ graph TD
 
     subgraph gdotns[GDOT Namespace]
       direction LR
+
       subgraph gdotsvc[GDOT OTLP Receiver Service]
         M[OTLP Metric Receiver]
         L[OTLP Log Receiver]
@@ -199,33 +201,33 @@ graph TD
         LP[Batch Processor]
         TP[Batch Processor]
         
-        exp1[GCP Metrics Exporter]
-        exp3[OTLP Exporter (Traces)]
+        exp1[GCP Cloud Monitoring Exporter]
+        exp3[OTLP Exporter]
       end
 
       subgraph promsvc[GDOT Prometheus Metrics Receiver Service]
         S[Prometheus Receiver as DaemonSet] --> |scrapes| A
         S --> SP[Batch Processor]
-        SP --> exp11[GCP Metrics Exporter]       
+        SP --> exp11[GCP Cloud Monitoring Exporter]       
       end
 
         A -->|http/grpc| M
         A -->|http/grpc| L
         A -->|http/grpc| T
-        M --> MP[Batch Processor]
-        L --> LP[Batch Processor]
-        T --> TP[Batch Processor]
-        MP --> exp1[GCP Metrics Exporter]
-        LP --> exp3[OTLP Exporter (Traces)]
-        TP --> exp3[OTLP Exporter (Traces)]
+        M --> MP
+        L --> LP
+        T --> TP
+        MP --> exp1
+        LP --> exp3
+        TP --> exp3
     end  
 end
 
-    subgraph elf_forwarding_storage[On Prem / ELF]
+    subgraph elf_forwarding_storage[On Prem / External]
         direction LR
-        exp3 -->|http/grpc| TB[ELF Endpoint]
+        exp3 -->|http/grpc| TB[ELF]
     end
-    
+
     subgraph metric_forwarding_storage[GCP]
         direction LR
         exp11 -->|https| MB[Cloud Monitoring]
@@ -239,11 +241,11 @@ end
     classDef promstyle fill: #FFE8DC, stroke: #D79B00, stroke-width: 1px;
     classDef gcpstyle fill: #D5F5E3, stroke: #6C8EBF, stroke-width: 1px;
     classDef elfstyle fill: #D5F5D3, stroke: #6C8EBF, stroke-width: 1px;
-
     gkecluster:::clusterstyle
     userns:::lgenstyle
     gdotsvc:::gdotstyle
     promsvc:::promstyle
     elf_forwarding_storage:::elfstyle
     metric_forwarding_storage:::gcpstyle
+
 ```
