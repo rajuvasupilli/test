@@ -1,4 +1,38 @@
 ```mermaid
+   graph TD
+    subgraph GKE Cluster
+        App[Application Pod]
+        FL[Fluent Bit (GKE Logging Agent)]
+        PromAgent[Managed Prometheus Agent]
+        GOTC[Google OpenTelemetry Collector]
+    end
+
+    %% App telemetry sources
+    App -->|Logs| FL
+    App -->|Metrics| PromAgent
+    App -->|Traces| GOTC
+    App -->|Metrics| GOTC
+    App -->|Logs| GOTC
+
+    %% Fluent Bit path
+    FL -->|Logs| CloudLogging[Cloud Logging]
+
+    %% Prometheus path
+    PromAgent -->|Metrics| GMP[Google Managed Prometheus]
+
+    %% GOTC telemetry routing
+    GOTC -->|Traces| CloudTrace[Cloud Trace]
+    GOTC -->|Logs| CloudLogging
+    GOTC -->|Metrics| GMP
+
+    %% Visualization layers
+    CloudLogging --> LogsViewer[Cloud Ops Suite - Logs Viewer]
+    CloudTrace --> TraceViewer[Cloud Ops Suite - Trace Viewer]
+    GMP --> MetricsViewer[Cloud Ops Suite - Metrics Explorer]
+```
+
+
+```mermaid
 %%{
   init: {
     'theme': 'neutral',
