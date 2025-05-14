@@ -1,8 +1,8 @@
 ```mermaid
    graph TD
-    subgraph GKE Cluster
+    subgraph GKE_Cluster
         App[Application Pod]
-        FL[Fluent Bit (GKE Logging Agent)]
+        FL[Fluent Bit - GKE Logging Agent]
         PromAgent[Managed Prometheus Agent]
         GOTC[Google OpenTelemetry Collector]
     end
@@ -26,9 +26,10 @@
     GOTC -->|Metrics| GMP
 
     %% Visualization layers
-    CloudLogging --> LogsViewer[Cloud Ops Suite - Logs Viewer]
-    CloudTrace --> TraceViewer[Cloud Ops Suite - Trace Viewer]
-    GMP --> MetricsViewer[Cloud Ops Suite - Metrics Explorer]
+    CloudLogging --> LogsViewer[Cloud Ops - Logs Viewer]
+    CloudTrace --> TraceViewer[Cloud Ops - Trace Viewer]
+    GMP --> MetricsViewer[Cloud Ops - Metrics Explorer]
+
 ```
 
 
