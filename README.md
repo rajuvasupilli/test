@@ -82,7 +82,7 @@ flowchart TD
     GCP:::CSP
     onPrem:::CSP
     GKE:::GKE
-```
+
 
 
 
@@ -168,3 +168,4 @@ flowchart TD
     GCP:::CSP
     External:::CSP
     GKE:::GKE
+```
