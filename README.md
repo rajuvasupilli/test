@@ -21,16 +21,16 @@ graph TD
       direction LR
 
       subgraph gdotsvc[GDOT OTLP Receiver Service]
-        M[OTLP Metric Receiver 🎯]
-        L[OTLP Log Receiver 📘]
-        T[OTLP Trace Receiver 🕵️‍♂️]
+        M[OTLP Metric Receiver]
+        L[OTLP Log Receiver]
+        T[OTLP Trace Receiver]
 
-        MP[Batch Processor 🔄]
-        LP[Batch Processor 🔄]
-        TP[Batch Processor 🔄]
+        MP[Batch Processor]
+        LP[Batch Processor]
+        TP[Batch Processor]
 
-        exp1[GCP Cloud Monitoring Exporter ☁️]
-        exp3[OTLP Exporter 🌐]
+        exp1[GCP Cloud Monitoring Exporter]
+        exp3[OTLP Exporter]
       end
 
       subgraph promsvc[Google Managed Prometheus - GMP]
@@ -38,15 +38,15 @@ graph TD
         S --> exp11[Cloud Monitoring]
       end
 
-        A -->|http/grpc via Istio mTLS 🔒| M
-        A -->|http/grpc via Istio mTLS 🔒| L
-        A -->|http/grpc via Istio mTLS 🔒| T
-        M -->|mTLS 🔒| MP
-        L -->|mTLS 🔒| LP
-        T -->|mTLS 🔒| TP
-        MP -->|mTLS 🔒| exp1
-        LP -->|mTLS 🔒| exp3
-        TP -->|mTLS 🔒| exp3
+        A -->|http/grpc via Istio mTLS| M
+        A -->|http/grpc via Istio mTLS| L
+        A -->|http/grpc via Istio mTLS| T
+        M -->|mTLS| MP
+        L -->|mTLS| LP
+        T -->|mTLS| TP
+        MP -->|mTLS| exp1
+        LP -->|mTLS| exp3
+        TP -->|mTLS| exp3
     end
 end
 
