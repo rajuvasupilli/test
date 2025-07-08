@@ -17,7 +17,7 @@ graph TD
         A[Application Containers]
     end
 
-    subgraph gdotns[GDOT Namespace (Istio mTLS Enabled 🔒)]
+    subgraph gdotns[GDOT Namespace Istio mTLS Enabled ]
       direction LR
 
       subgraph gdotsvc[GDOT OTLP Receiver Service]
