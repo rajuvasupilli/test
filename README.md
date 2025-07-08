@@ -1,4 +1,84 @@
 ```mermaid
+%%{
+  init: {
+    'theme': 'neutral',
+    'themeVariables': {
+      'backgroundColor': '#F5F5F5',
+      'primaryarrowcolor': '#000000'
+    }
+  }
+}%%
+
+graph TD
+    subgraph gkecluster[GKE Cluster]
+
+    subgraph userns[Application Namespace]
+        direction LR
+        A[Application Containers]
+    end
+
+    subgraph gdotns[GDOT Namespace]
+      direction LR
+
+      subgraph gdotsvc[GDOT OTLP Receiver Service]
+        M[OTLP Metric Receiver]
+        L[OTLP Log Receiver]
+        T[OTLP Trace Receiver]
+
+        MP[Batch Processor]
+        LP[Batch Processor]
+        TP[Batch Processor]
+
+        exp1[GCP Cloud Monitoring Exporter]
+        exp3[OTLP Exporter]
+      end
+
+      subgraph promsvc[Google Managed Prometheus - GMP]
+        S[GMP Agent DaemonSet] --> |scrapes| A
+        S --> exp11[Cloud Monitoring]
+      end
+
+        A -->|http/grpc| M
+        A -->|http/grpc| L
+        A -->|http/grpc| T
+        M --> MP
+        L --> LP
+        T --> TP
+        MP --> exp1
+        LP --> exp3
+        TP --> exp3
+    end
+end
+
+    subgraph elf_forwarding_storage[On Prem / External]
+        direction LR
+        exp3 -->|http/grpc| TB[ELF]
+    end
+
+    subgraph metric_forwarding_storage[GCP]
+        direction LR
+        exp11 -->|https| MB[Cloud Monitoring]
+        exp1 -->|https| MB[Cloud Monitoring]
+    end
+
+%% styling
+    classDef clusterstyle fill: #DDF8CC, stroke: #B85450, stroke-width: 1px;
+    classDef lgenstyle fill: #FFF8CC, stroke: #B85450, stroke-width: 1px;
+    classDef gdotstyle fill: #FFE6CC, stroke: #D79B00, stroke-width: 1px;
+    classDef promstyle fill: #FFE8DC, stroke: #D79B00, stroke-width: 1px;
+    classDef gcpstyle fill: #D5F5E3, stroke: #6C8EBF, stroke-width: 1px;
+    classDef elfstyle fill: #D5F5D3, stroke: #6C8EBF, stroke-width: 1px;
+    gkecluster:::clusterstyle
+    userns:::lgenstyle
+    gdotsvc:::gdotstyle
+    promsvc:::promstyle
+    elf_forwarding_storage:::elfstyle
+    metric_forwarding_storage:::gcpstyle
+```
+
+
+
+```mermaid
    graph TD
     subgraph GKE_Cluster
         App[Application Pod]
